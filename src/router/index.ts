@@ -1,4 +1,11 @@
-import { createRouter, createWebHistory, RouteRecordRaw, Router, RouteComponent } from 'vue-router';
+import {
+    createRouter,
+    createWebHistory,
+    RouteRecordRaw,
+    Router,
+    RouteComponent,
+    RouteLocationNormalized,
+} from 'vue-router';
 import { RouteUrls, RouteNames } from './route-urls';
 
 type RouteView = Promise<RouteComponent>;
@@ -16,6 +23,10 @@ const routes: Array<RouteRecordRaw> = [
 const router: Router = createRouter({
     history: createWebHistory(),
     routes,
+});
+
+router.beforeEach(async (route: RouteLocationNormalized) => {
+    // TODO: check auth
 });
 
 export default router;

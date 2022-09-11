@@ -1,9 +1,7 @@
 <template>
-    <v-app>
-        <v-main>
-            <div>Home</div>
-        </v-main>
-    </v-app>
+    <section>
+        <h1>{{ $t('forms.ticker') }}</h1>
+    </section>
 </template>
 
 <script setup lang="ts"></script>
