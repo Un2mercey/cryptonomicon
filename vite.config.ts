@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'url';
 import vue from '@vitejs/plugin-vue';
-import vueI18n from '@intlify/vite-plugin-vue-i18n';
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import vuetify from 'vite-plugin-vuetify';
 
 // https://vitejs.dev/config/
@@ -14,8 +14,9 @@ export default defineConfig({
     },
     plugins: [
         vue(),
-        vueI18n({
+        VueI18nPlugin({
             include: resolve(dirname(fileURLToPath(import.meta.url)), './src/locales/**'),
+            runtimeOnly: false,
         }),
         vuetify({ autoImport: true }),
     ],

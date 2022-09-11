@@ -20,7 +20,7 @@
         "vuetify": "3.0.0-beta.10"
     },
     "devDependencies": {
-        "@intlify/vite-plugin-vue-i18n": "^6.0.1",
+        "@intlify/unplugin-vue-i18n": "^0.5.0",
         "@types/node": "^18.7.14",
         "@types/qs": "^6.9.7",
         "@typescript-eslint/eslint-plugin": "^5.36.1",
