@@ -8,6 +8,7 @@
                 @click="selectTicker(ticker)"
                 variant="plain"
                 class="ticker-card ma-4"
+                :class="{ selected: ticker.id === activeTickerId }"
             >
                 <v-card-item>
                     <v-card-title class="d-flex justify-center">
@@ -36,9 +37,11 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import { ICoin } from '@/@interfaces';
+import { Nullable } from '@/@types';
 
 type TickerListProps = {
     tickerList: ICoin[];
+    activeTickerId: Nullable<string>;
 };
 
 enum EMITS {
@@ -51,7 +54,7 @@ type TickerListEmits = {
     (e: EMITS.SELECT, ticker: ICoin): void;
 };
 
-const { tickerList = [] } = defineProps<TickerListProps>();
+const { tickerList = [], activeTickerId } = defineProps<TickerListProps>();
 const emit = defineEmits<TickerListEmits>();
 
 function removeTicker(ticker: ICoin): void {
@@ -70,6 +73,10 @@ function getPrice(price: number): string {
 <style scoped lang="scss">
 .ticker-card {
     border-width: 1px;
+
+    &.selected {
+        border-color: purple;
+    }
 
     .v-card-item {
         padding: 0.8rem 1.5rem 0;

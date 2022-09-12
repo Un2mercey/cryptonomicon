@@ -44,6 +44,7 @@
                 <v-col cols="12">
                     <TickerList
                         :ticker-list="tickerList"
+                        :active-ticker-id="activeTicker?.id"
                         @remove="removeTicker"
                         @select="selectTicker"
                     />
