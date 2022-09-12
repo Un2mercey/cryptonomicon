@@ -5,10 +5,10 @@
 </template>
 
 <script setup lang="ts">
-import { ITicker } from '@/@interfaces';
+import { ICoin } from '@/@interfaces';
 
 type TickerGraphProps = {
-    ticker: ITicker;
+    ticker: ICoin;
 };
 
 const { ticker } = defineProps<TickerGraphProps>();

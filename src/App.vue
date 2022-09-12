@@ -10,23 +10,37 @@
 </template>
 
 <script setup lang="ts">
-import MainLayout from '@/elements/layout/MainLayout.vue';
-import Header from '@/elements/layout/Header.vue';
-import localizeTitles from '@/modules/localizeTitles';
 import { onMounted } from 'vue';
 import { IUser } from '@/@interfaces';
-import { UsersStore, useUsersStore } from '@/stores';
+import { CoinsStore, UsersStore, useUsersStore, useCoinsStore } from '@/stores';
+import localizeTitles from '@/modules/localizeTitles';
+import MainLayout from '@/elements/layout/MainLayout.vue';
+import Header from '@/elements/layout/Header.vue';
 
 const usersStore: UsersStore = useUsersStore();
 const { setUser, fetchUsers } = usersStore;
 
-onMounted(async () => {
+const coinsStore: CoinsStore = useCoinsStore();
+const { fetchCoinsList } = coinsStore;
+
+onMounted(() => {
     localizeTitles();
+    loadCoins();
+    loadUsers();
+});
+
+async function loadUsers(): Promise<void> {
     const fetchedUsers: IUser[] = await fetchUsers();
+    console.info('Users fetched');
     if (fetchedUsers.length) {
         setUser(fetchedUsers[0]);
     }
-});
+}
+
+async function loadCoins(): Promise<void> {
+    await fetchCoinsList();
+    console.info('Coins fetched');
+}
 </script>
 
 <style scoped lang="scss">

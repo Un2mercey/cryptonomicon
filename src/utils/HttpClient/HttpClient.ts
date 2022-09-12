@@ -16,9 +16,6 @@ interface AdvancedAxiosResponse<T = IResponse, D = IResponse> extends AxiosRespo
     config: AdvancedAxiosRequestConfig<D>;
 }
 
-type ResponseErrors = IResponse<Record<string, string[]>>;
-type ResponseWithErrors = IResponseError<Record<string, string[]>>;
-
 export class HttpClient {
     private readonly instance: AxiosInstance;
     private readonly handleInterceptorErrorOnResponse?: HandleInterceptorErrorOnResponse;
@@ -26,7 +23,7 @@ export class HttpClient {
     constructor(baseURL: string, config?: AxiosConfig) {
         this.instance = axios.create({
             baseURL,
-            withCredentials: true,
+            withCredentials: false,
             headers: {
                 Accept: 'application/json',
             },
@@ -46,12 +43,8 @@ export class HttpClient {
         this.instance.interceptors.response.use(this.handleResponse, this.handleError);
     };
 
-    private handleResponse = (response: AdvancedAxiosResponse): IResponse => {
-        const { data, meta } = response.data;
-        return {
-            data,
-            meta,
-        };
+    private handleResponse = (response: AdvancedAxiosResponse) => {
+        return response.data.Data;
     };
 
     private handleError = (error: AxiosError): Promise<AxiosError> => {
@@ -130,27 +123,4 @@ export class HttpClient {
     };
 
     public isCancel = (error: Error | IResponseError) => axios.isCancel(error);
-
-    /**
-     * Get error message from response
-     * @param error {ResponseWithErrors}
-     */
-    public getErrorMessage = (error?: ResponseWithErrors) => {
-        const data: ResponseErrors | undefined = error?.response?.data || (error as ResponseErrors);
-        const title: string | undefined = data?.meta?.message;
-        return [
-            title,
-            ...Object.values(data?.data && typeof data?.data === 'object' ? data.data : {})
-                .map((value: string[]) => value)
-                .flat(),
-        ]
-            .filter(Boolean)
-            .join(' ');
-    };
-
-    /**
-     * Get promise rejection with error message from response
-     * @param error {IResponse}
-     */
-    public processError = (error?: ResponseWithErrors) => Promise.reject(Error(this.getErrorMessage(error)));
 }
