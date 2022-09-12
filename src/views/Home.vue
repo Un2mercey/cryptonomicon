@@ -1,25 +1,5 @@
 <template>
     <section>
-        <template v-if="currentUser">
-            <h1>
-                {{ $t('notices.greetings') }},
-                {{ currentUser.lastName }}
-                {{ currentUser.firstName }}
-            </h1>
-        </template>
-        <template v-else>
-            <div class="d-flex">
-                <v-progress-circular
-                    size="40"
-                    class="mr-4"
-                    color="red"
-                    indeterminate
-                />
-                <h1>
-                    {{ $t('notices.fetching') }}
-                </h1>
-            </div>
-        </template>
         <h2>
             {{ $t('forms.ticker') }}
         </h2>
@@ -51,27 +31,15 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, Ref, ref } from 'vue';
-import { TickersStore, useTickersStore, UsersStore, useUsersStore } from '@/stores';
+import { Ref, ref } from 'vue';
+import { TickersStore, useTickersStore } from '@/stores';
 import { storeToRefs } from 'pinia';
-import { IUser } from '@/@interfaces';
 
 const tickersStore: TickersStore = useTickersStore();
 const { tickerList } = storeToRefs(tickersStore);
 const { addTicker, removeTicker } = tickersStore;
 
-const usersStore: UsersStore = useUsersStore();
-const { currentUser } = storeToRefs(usersStore);
-const { setUser, fetchUsers } = usersStore;
-
 const newTicker: Ref<string> = ref('');
-
-onMounted(async () => {
-    const fetchedUsers: IUser[] = await fetchUsers();
-    if (fetchedUsers.length) {
-        setUser(fetchedUsers[0]);
-    }
-});
 
 function createNewTicker() {
     addTicker({

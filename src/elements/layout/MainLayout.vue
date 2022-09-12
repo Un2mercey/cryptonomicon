@@ -1,6 +1,7 @@
 <template>
     <v-app>
         <v-main>
+            <slot name="header" />
             <slot />
         </v-main>
     </v-app>
