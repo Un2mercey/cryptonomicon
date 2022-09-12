@@ -28,3 +28,10 @@ onMounted(async () => {
     }
 });
 </script>
+
+<style scoped lang="scss">
+:deep(.v-btn--disabled) {
+    pointer-events: all;
+    cursor: not-allowed;
+}
+</style>
