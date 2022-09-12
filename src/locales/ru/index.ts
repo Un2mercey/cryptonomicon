@@ -1,9 +1,11 @@
-import forms from './forms.json';
-import pages from './pages.json';
 import buttons from './buttons.json';
+import forms from './forms.json';
+import notices from './notices.json';
+import pages from './pages.json';
 
 export const ru = {
-    forms,
-    pages,
     buttons,
+    forms,
+    notices,
+    pages,
 };
