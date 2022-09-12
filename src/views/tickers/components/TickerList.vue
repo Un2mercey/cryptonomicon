@@ -10,8 +10,11 @@
                 class="ticker-card ma-4"
             >
                 <v-card-item>
-                    <v-card-title>{{ ticker.name }} - USD</v-card-title>
-                    <v-card-text>{{ ticker.price }}</v-card-text>
+                    <v-card-title class="d-flex justify-center">
+                        {{ ticker.name }}
+                        {{ ticker.currency ? ` - ${ticker.currency}` : '' }}
+                    </v-card-title>
+                    <v-card-text v-show="ticker.price">{{ ticker.currencySymbol }} {{ ticker.price }}</v-card-text>
                     <v-card-actions>
                         <v-btn
                             @click="removeTicker(ticker)"
