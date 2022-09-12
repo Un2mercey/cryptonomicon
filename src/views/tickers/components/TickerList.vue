@@ -1,25 +1,29 @@
 <template>
     <section class="d-flex justify-start align-start flex-wrap">
-        <v-card
+        <template
             v-for="ticker in tickerList"
             :key="ticker.name"
-            variant="plain"
-            class="ticker-card ma-4"
         >
-            <v-card-item>
-                <v-card-title>{{ ticker.name }} - {{ ticker.sym }}</v-card-title>
-                <v-card-text>${{ ticker.price }}</v-card-text>
-                <v-card-actions>
-                    <v-btn
-                        @click="removeTicker(ticker)"
-                        color="warn"
-                        outlined
-                    >
-                        {{ $t('buttons.remove') }}
-                    </v-btn>
-                </v-card-actions>
-            </v-card-item>
-        </v-card>
+            <v-card
+                @click="selectTicker(ticker)"
+                variant="plain"
+                class="ticker-card ma-4"
+            >
+                <v-card-item>
+                    <v-card-title>{{ ticker.name }} - {{ ticker.sym }}</v-card-title>
+                    <v-card-text>${{ ticker.price }}</v-card-text>
+                    <v-card-actions>
+                        <v-btn
+                            @click="removeTicker(ticker)"
+                            color="warn"
+                            outlined
+                        >
+                            {{ $t('buttons.remove') }}
+                        </v-btn>
+                    </v-card-actions>
+                </v-card-item>
+            </v-card>
+        </template>
     </section>
 </template>
 
@@ -32,12 +36,14 @@ type TickerListProps = {
 };
 
 enum EMITS {
-    REMOVE = 'remove'
+    REMOVE = 'remove',
+    SELECT = 'select',
 }
 
 type TickerListEmits = {
-    (e: EMITS.REMOVE, ticker: ITicker): void,
-}
+    (e: EMITS.REMOVE, ticker: ITicker): void;
+    (e: EMITS.SELECT, ticker: ITicker): void;
+};
 
 const { tickerList = [] } = defineProps<TickerListProps>();
 const emit = defineEmits<TickerListEmits>();
@@ -46,6 +52,9 @@ function removeTicker(ticker: ITicker): void {
     emit(EMITS.REMOVE, ticker);
 }
 
+function selectTicker(ticker: ITicker): void {
+    emit(EMITS.SELECT, ticker);
+}
 </script>
 
 <style scoped lang="scss">

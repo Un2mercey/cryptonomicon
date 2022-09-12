@@ -37,42 +37,58 @@
                 </v-btn>
             </v-col>
         </v-row>
-        <template v-if='tickerList.length'>
+        <template v-if="tickerList.length">
             <v-divider class="mt-6 mb-2" />
             <v-row align="start">
                 <v-col cols="12">
                     <TickerList
                         :ticker-list="tickerList"
-                        @remove='removeTicker'
+                        @remove="removeTicker"
+                        @select="selectTicker"
                     />
                 </v-col>
             </v-row>
             <v-divider class="mt-2 mb-6" />
+        </template>
+        <template v-if="activeTicker">
+            <TickerGraph :ticker="activeTicker" />
         </template>
     </v-container>
 </template>
 
 <script setup lang="ts">
 import TickerList from './components/TickerList.vue';
+import TickerGraph from './components/TickerGraph.vue';
 import { Ref, ref } from 'vue';
 import { TickersStore, useTickersStore } from '@/stores';
 import { storeToRefs } from 'pinia';
+import { Nullable } from '@/@types';
+import { ITicker } from '@/@interfaces';
 
 const tickersStore: TickersStore = useTickersStore();
 const { tickerList } = storeToRefs(tickersStore);
 const { addTicker, removeTicker } = tickersStore;
 
 const newTicker: Ref<string> = ref('');
+const activeTicker: Ref<Nullable<ITicker>> = ref(null);
 
-function createNewTicker() {
+function createNewTicker(): void {
     addTicker({
         name: newTicker.value.trim(),
         price: Math.round(Math.random() * 1000),
-        sym: 'USD'
+        sym: 'USD',
     });
     newTicker.value = '';
 }
 
+function selectTicker(ticker: ITicker): void {
+    if (activeTicker.value?.name === ticker.name) {
+        activeTicker.value = null;
+        return;
+    }
+
+    activeTicker.value = ticker;
+}
 </script>
 
 <style scoped lang="scss">
