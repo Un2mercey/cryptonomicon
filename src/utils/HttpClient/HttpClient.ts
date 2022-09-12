@@ -45,7 +45,7 @@ export class HttpClient {
     };
 
     private handleResponse = (response: AdvancedAxiosResponse) => {
-        return response.data.Data;
+        return response.data.Data || response.data;
     };
 
     private handleError = (error: AxiosError): Promise<AxiosError> => {
