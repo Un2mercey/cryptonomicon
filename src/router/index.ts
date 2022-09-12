@@ -9,15 +9,15 @@ import {
 import { RouteUrls, RouteNames } from './route-urls';
 
 type RouteView = Promise<RouteComponent>;
-const Home: () => RouteView = (): RouteView => import('@/views/Home.vue');
+const Tickers: () => RouteView = (): RouteView => import('@/views/tickers/Tickers.vue');
 
 const routes: Array<RouteRecordRaw> = [
     {
         path: RouteUrls.HOME,
         name: RouteNames.HOME,
-        component: Home,
+        component: Tickers,
         meta: {
-            title: 'pages.home',
+            title: 'pages.tickers',
         },
     },
 ];
