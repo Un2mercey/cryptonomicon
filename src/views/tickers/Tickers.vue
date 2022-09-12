@@ -57,13 +57,13 @@
 </template>
 
 <script setup lang="ts">
-import TickerList from './components/TickerList.vue';
-import TickerGraph from './components/TickerGraph.vue';
 import { Ref, ref } from 'vue';
-import { TickersStore, useTickersStore } from '@/stores';
 import { storeToRefs } from 'pinia';
+import { TickersStore, useTickersStore } from '@/stores';
 import { Nullable } from '@/@types';
 import { ITicker } from '@/@interfaces';
+import TickerList from './components/TickerList.vue';
+import TickerGraph from './components/TickerGraph.vue';
 
 const tickersStore: TickersStore = useTickersStore();
 const { tickerList } = storeToRefs(tickersStore);

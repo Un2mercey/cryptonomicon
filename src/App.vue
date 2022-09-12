@@ -10,12 +10,12 @@
 </template>
 
 <script setup lang="ts">
-import MainLayout from '@/elements/layout/MainLayout.vue';
-import Header from '@/elements/layout/Header.vue';
-import localizeTitles from '@/modules/localizeTitles';
 import { onMounted } from 'vue';
 import { IUser } from '@/@interfaces';
 import { UsersStore, useUsersStore } from '@/stores';
+import localizeTitles from '@/modules/localizeTitles';
+import MainLayout from '@/elements/layout/MainLayout.vue';
+import Header from '@/elements/layout/Header.vue';
 
 const usersStore: UsersStore = useUsersStore();
 const { setUser, fetchUsers } = usersStore;
