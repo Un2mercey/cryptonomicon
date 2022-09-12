@@ -7,7 +7,7 @@ export interface IFetchCoinsListResponse {
         ImageUrl: string;
         ContentCreatedOn: number;
         Name: string;
-        Symbol: string
+        Symbol: string;
         CoinName: string;
         FullName: string;
         Description: string;
@@ -35,5 +35,5 @@ export interface IFetchCoinsListResponse {
         PlatformType: string;
         AlgorithmType: string;
         Difficulty: number;
-    }
+    };
 }

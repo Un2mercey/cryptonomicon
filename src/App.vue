@@ -31,15 +31,15 @@ onMounted(() => {
 
 async function loadUsers(): Promise<void> {
     const fetchedUsers: IUser[] = await fetchUsers();
+    console.info('Users fetched');
     if (fetchedUsers.length) {
         setUser(fetchedUsers[0]);
     }
 }
 
 async function loadCoins(): Promise<void> {
-    console.info("Fetching coins");
     await fetchCoinsList();
-    console.info("Coins fetched");
+    console.info('Coins fetched');
 }
 </script>
 

@@ -21,6 +21,7 @@
                 <v-text-field
                     v-model="newTicker"
                     :placeholder="$t('forms.newTicker')"
+                    @keyup.enter="createNewTicker"
                     autofocus
                     hide-details
                     outlined
@@ -61,7 +62,7 @@ import { Ref, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { TickersStore, useTickersStore } from '@/stores';
 import { Nullable } from '@/@types';
-import { ITicker } from '@/@interfaces';
+import { ICoin } from '@/@interfaces';
 import TickerList from './components/TickerList.vue';
 import TickerGraph from './components/TickerGraph.vue';
 
@@ -70,18 +71,15 @@ const { tickerList } = storeToRefs(tickersStore);
 const { addTicker, removeTicker } = tickersStore;
 
 const newTicker: Ref<string> = ref('');
-const activeTicker: Ref<Nullable<ITicker>> = ref(null);
+const activeTicker: Ref<Nullable<ICoin>> = ref(null);
 
 function createNewTicker(): void {
-    addTicker({
-        name: newTicker.value.trim(),
-        price: Math.round(Math.random() * 1000),
-        sym: 'USD',
+    addTicker(newTicker.value.trim().toLowerCase()).then(() => {
+        newTicker.value = '';
     });
-    newTicker.value = '';
 }
 
-function selectTicker(ticker: ITicker): void {
+function selectTicker(ticker: ICoin): void {
     if (activeTicker.value?.name === ticker.name) {
         activeTicker.value = null;
         return;

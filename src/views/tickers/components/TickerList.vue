@@ -2,7 +2,7 @@
     <section class="d-flex justify-start align-start flex-wrap">
         <template
             v-for="ticker in tickerList"
-            :key="ticker.name"
+            :key="ticker.id"
         >
             <v-card
                 @click="selectTicker(ticker)"
@@ -10,8 +10,8 @@
                 class="ticker-card ma-4"
             >
                 <v-card-item>
-                    <v-card-title>{{ ticker.name }} - {{ ticker.sym }}</v-card-title>
-                    <v-card-text>${{ ticker.price }}</v-card-text>
+                    <v-card-title>{{ ticker.name }} - USD</v-card-title>
+                    <v-card-text>{{ ticker.price }}</v-card-text>
                     <v-card-actions>
                         <v-btn
                             @click="removeTicker(ticker)"
@@ -29,10 +29,10 @@
 
 <script setup lang="ts">
 import { defineProps } from 'vue';
-import { ITicker } from '@/@interfaces';
+import { ICoin } from '@/@interfaces';
 
 type TickerListProps = {
-    tickerList: ITicker[];
+    tickerList: ICoin[];
 };
 
 enum EMITS {
@@ -41,18 +41,18 @@ enum EMITS {
 }
 
 type TickerListEmits = {
-    (e: EMITS.REMOVE, ticker: ITicker): void;
-    (e: EMITS.SELECT, ticker: ITicker): void;
+    (e: EMITS.REMOVE, ticker: ICoin): void;
+    (e: EMITS.SELECT, ticker: ICoin): void;
 };
 
 const { tickerList = [] } = defineProps<TickerListProps>();
 const emit = defineEmits<TickerListEmits>();
 
-function removeTicker(ticker: ITicker): void {
+function removeTicker(ticker: ICoin): void {
     emit(EMITS.REMOVE, ticker);
 }
 
-function selectTicker(ticker: ITicker): void {
+function selectTicker(ticker: ICoin): void {
     emit(EMITS.SELECT, ticker);
 }
 </script>

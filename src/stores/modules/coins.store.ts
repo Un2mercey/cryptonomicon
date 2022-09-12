@@ -22,23 +22,26 @@ export const useCoinsStore: TickersStoreDefinition = defineStore(STORE_NAME, () 
     const coinsList: Ref<ICoin[]> = ref([]);
 
     function fetchCoinsList(): Promise<void> {
-        return httpClient.get<IFetchCoinsListResponse>(
-            apiUrls.GET_COINS_LIST, {
-            headers: {
-                'authorization': `Apikey ${import.meta.env.VITE_CRYPTOCOMPARE_API_KEY}`
-            }
-        }).then((response: IFetchCoinsListResponse) => {
-            coinsList.value = Object.values(response).map((coin): ICoin => ({
-                id: coin.Id,
-                imageUrl: coin.ImageUrl,
-                name: coin.Name,
-                symbol: coin.Symbol,
-                coinName: coin.CoinName,
-                fullCoinName: coin.FullName,
-                description: coin.Description,
-                isTrading: coin.IsTrading,
-            }))
-        });
+        return httpClient
+            .get<IFetchCoinsListResponse>(apiUrls.GET_COINS_LIST, {
+                headers: {
+                    authorization: `Apikey ${import.meta.env.VITE_CRYPTOCOMPARE_API_KEY}`,
+                },
+            })
+            .then((response: IFetchCoinsListResponse) => {
+                coinsList.value = Object.values(response).map(
+                    (coin): ICoin => ({
+                        id: coin.Id,
+                        imageUrl: coin.ImageUrl,
+                        name: coin.Name,
+                        symbol: coin.Symbol,
+                        coinName: coin.CoinName,
+                        fullCoinName: coin.FullName,
+                        description: coin.Description,
+                        isTrading: coin.IsTrading,
+                    })
+                );
+            });
     }
 
     return {

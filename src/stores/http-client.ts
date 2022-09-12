@@ -1,5 +1,5 @@
 import { HttpClient } from '@/utils';
 
-const httpClient: HttpClient = new HttpClient( '/');
+const httpClient: HttpClient = new HttpClient('/');
 
 export default httpClient;
