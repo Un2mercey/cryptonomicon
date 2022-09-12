@@ -1,11 +1,11 @@
 <template>
     <section>
-        <h2>
+        <h5 class='text-h5'>
             {{ $t('forms.ticker') }}
-        </h2>
+        </h5>
         <v-text-field
             v-model="newTicker"
-            outlined
+            :placeholder="$t('forms.newTicker')"
             class="mb-4 w-25 h-25"
         />
         <div class="d-flex mb-4">

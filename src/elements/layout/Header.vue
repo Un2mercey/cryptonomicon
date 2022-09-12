@@ -1,11 +1,11 @@
 <template>
     <header class="mb-4">
         <template v-if="currentUser">
-            <h1>
+            <h4 class="text-h4">
                 {{ $t('notices.greetings') }},
                 {{ currentUser.lastName }}
                 {{ currentUser.firstName }}
-            </h1>
+            </h4>
         </template>
         <template v-else>
             <div class="d-flex">
@@ -15,9 +15,9 @@
                     color="red"
                     indeterminate
                 />
-                <h1>
+                <h4 class="text-h4">
                     {{ $t('notices.fetching') }}
-                </h1>
+                </h4>
             </div>
         </template>
     </header>
