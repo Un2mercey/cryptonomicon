@@ -1,9 +1,8 @@
+import { Ref, ref } from 'vue';
 import { defineStore, Store, StoreDefinition } from 'pinia';
 import { ITicker } from '@/@interfaces';
-import { Ref, ref } from 'vue';
 
 interface State {
-    coins: unknown[];
     tickerList: ITicker[];
 }
 
@@ -32,8 +31,6 @@ export const useTickersStore: TickersStoreDefinition = defineStore(STORE_NAME, (
         },
     ]);
 
-    const coins: Ref<unknown[]> = ref([]);
-
     function addTicker(newTicker: ITicker): void {
         tickerList.value.push(newTicker);
     }
@@ -46,7 +43,6 @@ export const useTickersStore: TickersStoreDefinition = defineStore(STORE_NAME, (
     }
 
     return {
-        coins,
         tickerList,
         addTicker,
         removeTicker,

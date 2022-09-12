@@ -1,5 +1,5 @@
-import { defineStore, Store, StoreDefinition } from 'pinia';
 import { Ref, ref } from 'vue';
+import { defineStore, Store, StoreDefinition } from 'pinia';
 import { IUser } from '@/@interfaces';
 
 interface State {
