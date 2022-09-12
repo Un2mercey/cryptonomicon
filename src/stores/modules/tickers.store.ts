@@ -1,8 +1,11 @@
 import { Ref, ref } from 'vue';
 import { defineStore, Store, StoreDefinition } from 'pinia';
-import { ICoin } from '@/@interfaces';
+import { ICoin, IFetchCurrenciesRequestParams, IFetchCurrenciesResponse } from '@/@interfaces';
 import { CoinsStore, useCoinsStore } from '@/stores';
 import { Undefined } from '@/@types';
+import * as apiUrls from '@/stores/api-urls';
+import httpClient from '@/stores/http-client';
+import { Currencies, CurrenciesSymbol } from '@/utils';
 
 interface State {
     tickerList: ICoin[];
@@ -12,6 +15,7 @@ interface Getters {}
 
 interface Actions {
     addTicker: (name: string) => Promise<void>;
+    fetchCurrencies: (currency: Currencies) => Promise<void>;
     removeTicker: (ticker: ICoin) => void;
 }
 
@@ -52,6 +56,26 @@ export const useTickersStore: TickersStoreDefinition = defineStore(STORE_NAME, (
         });
     }
 
+    function fetchCurrencies(currency: Currencies): Promise<void> {
+        const params: IFetchCurrenciesRequestParams = {
+            fsyms: tickerList.value.map((ticker: ICoin) => ticker.name).join(','),
+            tsyms: currency,
+        };
+        return httpClient
+            .get<IFetchCurrenciesResponse>(apiUrls.GET_PRICES, { params })
+            .then((response: IFetchCurrenciesResponse) => {
+                Object.keys(response).forEach((coinName: string) => {
+                    tickerList.value.forEach((ticker: ICoin) => {
+                        if (ticker.name === coinName) {
+                            ticker.currency = currency;
+                            ticker.currencySymbol = CurrenciesSymbol[currency];
+                            ticker.price = response[coinName][currency];
+                        }
+                    });
+                });
+            });
+    }
+
     function removeTicker(ticker: ICoin): void {
         const tickerIdx: number = tickerList.value.findIndex((coin: ICoin) => coin.name === ticker.name);
         if (tickerIdx >= 0) {
@@ -62,6 +86,7 @@ export const useTickersStore: TickersStoreDefinition = defineStore(STORE_NAME, (
     return {
         tickerList,
         addTicker,
+        fetchCurrencies,
         removeTicker,
     };
 });

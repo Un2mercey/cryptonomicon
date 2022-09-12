@@ -20,12 +20,13 @@ export class HttpClient {
     private readonly instance: AxiosInstance;
     private readonly handleInterceptorErrorOnResponse?: HandleInterceptorErrorOnResponse;
 
-    constructor(baseURL: string, config?: AxiosConfig) {
+    constructor(baseURL: string, apiKey: string, config?: AxiosConfig) {
         this.instance = axios.create({
             baseURL,
             withCredentials: false,
             headers: {
                 Accept: 'application/json',
+                authorization: `Apikey ${apiKey}`,
             },
         });
 
@@ -44,7 +45,7 @@ export class HttpClient {
     };
 
     private handleResponse = (response: AdvancedAxiosResponse) => {
-        return response.data.Data;
+        return response.data.Data || response.data;
     };
 
     private handleError = (error: AxiosError): Promise<AxiosError> => {

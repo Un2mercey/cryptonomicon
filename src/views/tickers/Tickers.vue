@@ -58,20 +58,30 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, ref } from 'vue';
+import { Ref, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { TickersStore, useTickersStore } from '@/stores';
 import { Nullable } from '@/@types';
 import { ICoin } from '@/@interfaces';
+import { Currencies } from '@/utils';
 import TickerList from './components/TickerList.vue';
 import TickerGraph from './components/TickerGraph.vue';
 
 const tickersStore: TickersStore = useTickersStore();
 const { tickerList } = storeToRefs(tickersStore);
-const { addTicker, removeTicker } = tickersStore;
+const { addTicker, fetchCurrencies, removeTicker } = tickersStore;
 
 const newTicker: Ref<string> = ref('');
 const activeTicker: Ref<Nullable<ICoin>> = ref(null);
+
+let interval: Nullable<ReturnType<typeof setInterval>> = null;
+
+watch(
+    () => tickerList.value.length,
+    () => {
+        loadCurrencies();
+    }
+);
 
 function createNewTicker(): void {
     addTicker(newTicker.value.trim().toLowerCase()).then(() => {
@@ -86,6 +96,16 @@ function selectTicker(ticker: ICoin): void {
     }
 
     activeTicker.value = ticker;
+}
+
+function loadCurrencies(): void {
+    if (interval) {
+        clearInterval(interval);
+    }
+    fetchCurrencies(Currencies.USD);
+    interval = setInterval(() => {
+        fetchCurrencies(Currencies.USD);
+    }, 5000);
 }
 </script>
 

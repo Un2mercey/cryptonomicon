@@ -10,8 +10,14 @@
                 class="ticker-card ma-4"
             >
                 <v-card-item>
-                    <v-card-title>{{ ticker.name }} - USD</v-card-title>
-                    <v-card-text>{{ ticker.price }}</v-card-text>
+                    <v-card-title class="d-flex justify-center">
+                        {{ ticker.name }}
+                        {{ ticker.currency ? ` - ${ticker.currency}` : '' }}
+                    </v-card-title>
+                    <v-card-text v-if="ticker.price">
+                        {{ ticker.currencySymbol }}
+                        {{ getPrice(ticker.price) }}
+                    </v-card-text>
                     <v-card-actions>
                         <v-btn
                             @click="removeTicker(ticker)"
@@ -54,6 +60,10 @@ function removeTicker(ticker: ICoin): void {
 
 function selectTicker(ticker: ICoin): void {
     emit(EMITS.SELECT, ticker);
+}
+
+function getPrice(price: number): string {
+    return price > 1 ? price.toFixed(2) : price.toPrecision(2);
 }
 </script>
 

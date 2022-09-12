@@ -23,11 +23,7 @@ export const useCoinsStore: TickersStoreDefinition = defineStore(STORE_NAME, () 
 
     function fetchCoinsList(): Promise<void> {
         return httpClient
-            .get<IFetchCoinsListResponse>(apiUrls.GET_COINS_LIST, {
-                headers: {
-                    authorization: `Apikey ${import.meta.env.VITE_CRYPTOCOMPARE_API_KEY}`,
-                },
-            })
+            .get<IFetchCoinsListResponse>(apiUrls.GET_COINS_LIST)
             .then((response: IFetchCoinsListResponse) => {
                 coinsList.value = Object.values(response).map(
                     (coin): ICoin => ({
@@ -39,6 +35,9 @@ export const useCoinsStore: TickersStoreDefinition = defineStore(STORE_NAME, () 
                         fullCoinName: coin.FullName,
                         description: coin.Description,
                         isTrading: coin.IsTrading,
+                        price: null,
+                        currency: null,
+                        currencySymbol: null,
                     })
                 );
             });
