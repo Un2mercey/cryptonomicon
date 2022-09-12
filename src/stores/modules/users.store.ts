@@ -49,6 +49,7 @@ export const useUsersStore: UsersStoreDefinition = defineStore(STORE_NAME, () =>
         return new Promise((resolve) => {
             setTimeout(() => {
                 console.info('Users fetched');
+                availableUsers.value = usersMock;
                 resolve(usersMock);
             }, 3000);
         });

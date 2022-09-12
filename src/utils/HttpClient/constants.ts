@@ -1,6 +1,3 @@
-export const AUTH_TOKEN: string = process.env.VUE_APP_AUTH_TOKEN || '';
-
-/* eslint-disable max-len */
 export const enum HttpStatusCode {
     /**
      * The server has received the request headers and the client should proceed to send the request body
