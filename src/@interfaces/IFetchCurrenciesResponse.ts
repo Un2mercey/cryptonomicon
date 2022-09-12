@@ -1,5 +1,5 @@
 export interface IFetchCurrenciesResponse {
-    [key: string]: {
-        [key: string]: number;
+    [coinName: string]: {
+        [currency: string]: number;
     };
 }
