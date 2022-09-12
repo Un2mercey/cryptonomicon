@@ -16,7 +16,9 @@ const routes: Array<RouteRecordRaw> = [
         path: RouteUrls.HOME,
         name: RouteNames.HOME,
         component: Home,
-        meta: { title: 'pages.home' },
+        meta: {
+            title: 'pages.home',
+        },
     },
 ];
 

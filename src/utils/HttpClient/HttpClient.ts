@@ -48,7 +48,10 @@ export class HttpClient {
 
     private handleResponse = (response: AdvancedAxiosResponse): IResponse => {
         const { data, meta } = response.data;
-        return { data, meta };
+        return {
+            data,
+            meta,
+        };
     };
 
     private handleError = (error: AxiosError): Promise<AxiosError> => {
@@ -90,7 +93,9 @@ export class HttpClient {
         if (typeof AbortController === 'undefined') {
             return;
         }
-        const singletonRequests: { [key: string]: (() => void) | undefined } = {};
+        const singletonRequests: {
+            [key: string]: (() => void) | undefined;
+        } = {};
 
         function getSingletonRequestId(config: AdvancedAxiosRequestConfig) {
             return config?.singletonRequestId;

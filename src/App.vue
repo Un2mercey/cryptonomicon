@@ -2,7 +2,7 @@
     <MainLayout>
         <router-view #default="{ Component }">
             <transition name="fade">
-                <component :is="Component"/>
+                <component :is="Component" />
             </transition>
         </router-view>
     </MainLayout>

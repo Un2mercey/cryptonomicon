@@ -19,6 +19,17 @@
         "@typescript-eslint/object-curly-spacing": "warn",
         "import/prefer-default-export": 0,
         "no-shadow": "off",
+        "vue/max-attributes-per-line": [
+            "error",
+            {
+                "singleline": {
+                    "max": 1
+                },
+                "multiline": {
+                    "max": 1
+                }
+            }
+        ],
         "@typescript-eslint/no-shadow": [
             "error",
             {
@@ -32,10 +43,7 @@
                 "ignorePattern": "^import|^export|/.*/[;|,]$|'.*'[;|,]$|`.*`[;|,]$|^\\s*((//|\\*)\\s+)?(.{1,3} )?(https?)://[^ ]+$"
             }
         ],
-        "arrow-parens": [
-            2,
-            "as-needed"
-        ],
+        "arrow-parens": [2, "as-needed"],
         "no-nested-ternary": "error",
         "prefer-destructuring": [
             "error",
@@ -77,14 +85,8 @@
             }
         ],
         "@typescript-eslint/no-inferrable-types": "off",
-        "vue/html-indent": [
-            "error",
-            4
-        ],
-        "vue/html-comment-indent": [
-            "error",
-            4
-        ],
+        "vue/html-indent": ["error", 4],
+        "vue/html-comment-indent": ["error", 4],
         "vue/script-indent": [
             "error",
             4,

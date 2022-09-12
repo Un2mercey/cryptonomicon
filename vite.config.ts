@@ -18,6 +18,8 @@ export default defineConfig({
             include: resolve(dirname(fileURLToPath(import.meta.url)), './src/locales/**'),
             runtimeOnly: false,
         }),
-        vuetify({ autoImport: true }),
+        vuetify({
+            autoImport: true,
+        }),
     ],
 });
