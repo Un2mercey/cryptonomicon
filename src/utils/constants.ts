@@ -7,12 +7,12 @@ export const isCorrectEnum: <T>(e: T) => (token: unknown) => token is T[keyof T]
     (token: unknown): token is T[keyof T] =>
         Object.values(e as { [key: string]: unknown }).includes(token as T[keyof T]);
 
-export enum Currencies {
+export enum Currency {
     USD = 'USD',
     EUR = 'EUR',
 }
 
-export enum CurrenciesSymbol {
+export enum CurrencySymbol {
     USD = '$',
     EUR = '€',
 }

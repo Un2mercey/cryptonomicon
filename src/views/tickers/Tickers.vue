@@ -19,7 +19,8 @@
                 class="pr-6"
             >
                 <v-text-field
-                    v-model="newTicker"
+                    v-model="newTickerName"
+                    :disabled="!coins.length"
                     :placeholder="$t('forms.newTicker')"
                     @keyup.enter="createNewTicker"
                     autofocus
@@ -29,7 +30,7 @@
             </v-col>
             <v-col>
                 <v-btn
-                    :disabled="!newTicker.trim().length"
+                    :disabled="!newTickerName.trim().length"
                     @click="createNewTicker"
                     color="primary"
                     outlined
@@ -38,13 +39,13 @@
                 </v-btn>
             </v-col>
         </v-row>
-        <template v-if="tickerList.length">
+        <template v-if="tickers.length">
             <v-divider class="mt-6 mb-2" />
             <v-row align="start">
                 <v-col cols="12">
                     <TickerList
-                        :ticker-list="tickerList"
-                        :active-ticker-id="activeTicker?.id"
+                        :tickers="tickers"
+                        :active-ticker="activeTicker?.name"
                         @remove="removeTicker"
                         @select="selectTicker"
                     />
@@ -61,32 +62,32 @@
 <script setup lang="ts">
 import { Ref, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
-import { TickersStore, useTickersStore } from '@/stores';
+import { CoinsStore, useCoinsStore } from '@/stores';
 import { Nullable } from '@/@types';
 import { ICoin } from '@/@interfaces';
-import { Currencies } from '@/utils';
+import { Currency } from '@/utils';
 import TickerList from './components/TickerList.vue';
 import TickerGraph from './components/TickerGraph.vue';
 
-const tickersStore: TickersStore = useTickersStore();
-const { tickerList } = storeToRefs(tickersStore);
-const { addTicker, fetchCurrencies, removeTicker } = tickersStore;
+const coinsStore: CoinsStore = useCoinsStore();
+const { tickers, coins } = storeToRefs<CoinsStore>(coinsStore);
+const { fetchCoinsPrices, addTicker, removeTicker } = coinsStore;
 
-const newTicker: Ref<string> = ref('');
+const newTickerName: Ref<string> = ref('');
 const activeTicker: Ref<Nullable<ICoin>> = ref(null);
 
 let interval: Nullable<ReturnType<typeof setInterval>> = null;
 
 watch(
-    () => tickerList.value.length,
-    () => {
-        loadCurrencies();
+    () => tickers.value.length,
+    (value: number) => {
+        value > 0 ? loadCurrencies() : clearInterval(interval!);
     }
 );
 
 function createNewTicker(): void {
-    addTicker(newTicker.value.trim().toLowerCase()).then(() => {
-        newTicker.value = '';
+    addTicker(newTickerName.value.trim()).then(() => {
+        newTickerName.value = '';
     });
 }
 
@@ -100,12 +101,12 @@ function selectTicker(ticker: ICoin): void {
 }
 
 function loadCurrencies(): void {
-    if (interval) {
+    if (interval !== null) {
         clearInterval(interval);
     }
-    fetchCurrencies(Currencies.USD);
+    fetchCoinsPrices(Currency.USD);
     interval = setInterval(() => {
-        fetchCurrencies(Currencies.USD);
+        fetchCoinsPrices(Currency.USD);
     }, 5000);
 }
 </script>

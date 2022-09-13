@@ -17,28 +17,27 @@ interface Actions {
 type UsersStoreDefinition = StoreDefinition<typeof STORE_NAME, State, Getters, Actions>;
 export type UsersStore = Store<typeof STORE_NAME, State, Getters, Actions>;
 
+const usersMock = [
+    {
+        firstName: 'Arseniy',
+        lastName: 'Markov',
+        email: 'zamberg42@gmail.com',
+    },
+    {
+        firstName: 'Alibaba',
+        lastName: 'Zurabovich',
+        email: 'alibaba.zurabovich@gmail.com',
+    },
+    {
+        firstName: 'Jason',
+        lastName: 'Momoa',
+        email: 'jason-momoa@gmail.com',
+    },
+];
+
 const STORE_NAME = 'users';
 export const useUsersStore: UsersStoreDefinition = defineStore(STORE_NAME, () => {
-    const usersMock = [
-        {
-            firstName: 'Arseniy',
-            lastName: 'Markov',
-            email: 'zamberg42@gmail.com',
-        },
-        {
-            firstName: 'Alibaba',
-            lastName: 'Zurabovich',
-            email: 'alibaba.zurabovich@gmail.com',
-        },
-        {
-            firstName: 'Jason',
-            lastName: 'Momoa',
-            email: 'jason-momoa@gmail.com',
-        },
-    ];
-
     const currentUser: Ref<IUser> = ref(null);
-
     const availableUsers: Ref<IUser[]> = ref([]);
 
     function setUser(user: IUser): void {

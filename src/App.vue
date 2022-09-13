@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onBeforeMount } from 'vue';
 import { IUser } from '@/@interfaces';
 import { CoinsStore, UsersStore, useUsersStore, useCoinsStore } from '@/stores';
 import localizeTitles from '@/modules/localizeTitles';
@@ -21,9 +21,9 @@ const usersStore: UsersStore = useUsersStore();
 const { setUser, fetchUsers } = usersStore;
 
 const coinsStore: CoinsStore = useCoinsStore();
-const { fetchCoinsList } = coinsStore;
+const { fetchCoins } = coinsStore;
 
-onMounted(() => {
+onBeforeMount(() => {
     localizeTitles();
     loadCoins();
     loadUsers();
@@ -38,7 +38,7 @@ async function loadUsers(): Promise<void> {
 }
 
 async function loadCoins(): Promise<void> {
-    await fetchCoinsList();
+    await fetchCoins();
     console.info('Coins fetched');
 }
 </script>

@@ -1,16 +1,14 @@
-import { Currencies, CurrenciesSymbol } from '@/utils';
-import { Nullable } from '@/@types';
+import { CoinName, Nullable } from '@/@types';
+import { Currency } from '@/utils';
 
 export interface ICoin {
     id: string;
     imageUrl: string;
-    name: string;
+    name: CoinName;
     symbol: string;
     coinName: string;
     fullCoinName: string;
     description: string;
     isTrading: boolean;
-    price: Nullable<number>;
-    currency: Nullable<Currencies>;
-    currencySymbol: Nullable<CurrenciesSymbol>;
+    currency: Nullable<Currency>;
 }
