@@ -83,8 +83,8 @@ function selectTicker(ticker: ICoin): void {
     emit(EMITS.SELECT, ticker);
 }
 
-function getPrice(price: Undefined<number>): string {
-    return (price && (price > 1 ? price.toFixed(2) : price.toPrecision(2))) || '';
+function getPrice(price: number): string {
+    return price > 1 ? price.toFixed(2) : price.toPrecision(2);
 }
 </script>
 
