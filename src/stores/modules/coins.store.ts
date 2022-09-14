@@ -1,11 +1,13 @@
-import { computed, ComputedRef, Ref, ref } from 'vue';
-import { defineStore, Store, StoreDefinition } from 'pinia';
 import { findIndex } from 'lodash';
+import { defineStore, Store, StoreDefinition } from 'pinia';
+import { computed, ref } from 'vue';
 import { ICoin, IFetchCoinsPricesRequestParams } from '@/@interfaces';
-import { coinFinder, coinsConverter, Currency } from '@/utils';
 import { CoinName, CoinsPrices, FetchCoinsPricesResponse, FetchCoinsResponse, Undefined } from '@/@types';
+import { coinFinder, coinsConverter, Currencies, StoreNames } from '@/utils';
 import httpClient from '@/stores/http-client';
 import * as apiUrls from '@/stores/api-urls';
+
+type GetTickerLastPrice = (name: CoinName) => Undefined<number>;
 
 interface State {
     coins: ICoin[];
@@ -14,28 +16,27 @@ interface State {
 }
 
 interface Getters {
-    getTickerLastPrice: () => (name: CoinName) => Undefined<number>;
+    isCoinsFetched: () => boolean;
+    getTickerLastPrice: () => GetTickerLastPrice;
 }
 
 interface Actions {
     fetchCoins: () => Promise<void>;
-    fetchCoinsPrices: (currency: Currency) => Promise<void>;
+    fetchCoinsPrices: (currency: Currencies) => Promise<void>;
     addTicker: (name: CoinName) => Promise<void>;
     removeTicker: (ticker: ICoin) => void;
 }
 
-type TickersStoreDefinition = StoreDefinition<typeof STORE_NAME, State, Getters, Actions>;
-export type CoinsStore = Store<typeof STORE_NAME, State, Getters, Actions>;
+type SD = StoreDefinition<StoreNames.COINS, State, Getters, Actions>;
+export type CoinsStore = Readonly<Store<StoreNames.COINS, State, Getters, Actions>>;
 
-const STORE_NAME = 'coins';
-export const useCoinsStore: TickersStoreDefinition = defineStore(STORE_NAME, () => {
-    const coins: Ref<ICoin[]> = ref([]);
-    const tickers: Ref<ICoin[]> = ref([]);
-    const coinsPrices: Ref<CoinsPrices> = ref({});
+export const useCoinsStore: SD = defineStore(StoreNames.COINS, () => {
+    const coins = ref<ICoin[]>([]);
+    const tickers = ref<ICoin[]>([]);
+    const coinsPrices = ref<CoinsPrices>({});
 
-    const getTickerLastPrice: ComputedRef<(name: CoinName) => Undefined<number>> = computed(
-        () => (name: CoinName) => coinsPrices.value[name]?.at(-1)
-    );
+    const isCoinsFetched = computed<boolean>(() => Boolean(coins.value.length));
+    const getTickerLastPrice = computed<GetTickerLastPrice>(() => (name: CoinName) => coinsPrices.value[name]?.at(-1));
 
     function fetchCoins(): Promise<void> {
         return httpClient.get<FetchCoinsResponse>(apiUrls.GET_COINS_LIST).then((response: FetchCoinsResponse) => {
@@ -43,7 +44,7 @@ export const useCoinsStore: TickersStoreDefinition = defineStore(STORE_NAME, () 
         });
     }
 
-    function fetchCoinsPrices(currency: Currency): Promise<void> {
+    function fetchCoinsPrices(currency: Currencies): Promise<void> {
         const params: IFetchCoinsPricesRequestParams = {
             fsyms: tickers.value.map((ticker: ICoin) => ticker.name).join(','),
             tsyms: currency,
@@ -94,6 +95,7 @@ export const useCoinsStore: TickersStoreDefinition = defineStore(STORE_NAME, () 
         coins,
         tickers,
         coinsPrices,
+        isCoinsFetched,
         getTickerLastPrice,
         fetchCoins,
         fetchCoinsPrices,

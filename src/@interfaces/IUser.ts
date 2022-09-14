@@ -1,7 +1,6 @@
-import { Nullable } from '@/@types';
-
-export type IUser = Nullable<{
-    firstName: string;
-    lastName: string;
+export interface IUser {
+    id: number;
+    name: string;
+    username: string;
     email: string;
-}>;
+}

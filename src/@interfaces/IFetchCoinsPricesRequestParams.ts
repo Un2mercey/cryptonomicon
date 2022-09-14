@@ -1,6 +1,6 @@
-import { Currency } from '@/utils';
+import { Currencies } from '@/utils';
 
 export interface IFetchCoinsPricesRequestParams {
     fsyms: string;
-    tsyms: Currency;
+    tsyms: Currencies;
 }

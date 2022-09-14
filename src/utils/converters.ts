@@ -1,6 +1,6 @@
 import { find } from 'lodash';
-import { CoinName, FetchCoinsResponse, Undefined } from '@/@types';
 import { ICoin, IFetchCoinsResponseItem } from '@/@interfaces';
+import { CoinName, FetchCoinsResponse, Undefined } from '@/@types';
 
 type CoinsConverter = (from: FetchCoinsResponse) => ICoin[];
 export const coinsConverter: CoinsConverter = (from: FetchCoinsResponse): ICoin[] => {

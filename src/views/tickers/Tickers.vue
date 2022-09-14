@@ -20,7 +20,8 @@
             >
                 <v-text-field
                     v-model="newTickerName"
-                    :disabled="!coins.length"
+                    :disabled="!isCoinsFetched"
+                    :loading="!isCoinsFetched"
                     :placeholder="$t('forms.newTicker')"
                     @keyup.enter="createNewTicker"
                     autofocus
@@ -54,34 +55,45 @@
             <v-divider class="mt-2 mb-6" />
         </template>
         <template v-if="activeTicker">
-            <TickerGraph :ticker="activeTicker" />
+            <TickerGraph
+                :ticker="activeTicker"
+                :amounts="tickerAmounts"
+            />
         </template>
     </v-container>
 </template>
 
 <script setup lang="ts">
-import { Ref, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
-import { CoinsStore, useCoinsStore } from '@/stores';
-import { Nullable } from '@/@types';
+import { computed, ref, watch } from 'vue';
 import { ICoin } from '@/@interfaces';
-import { Currency } from '@/utils';
+import { Nullable, SetInterval } from '@/@types';
+import { CoinsStore, useCoinsStore } from '@/stores';
+import { Currencies } from '@/utils';
 import TickerList from './components/TickerList.vue';
 import TickerGraph from './components/TickerGraph.vue';
 
 const coinsStore: CoinsStore = useCoinsStore();
-const { tickers, coins } = storeToRefs<CoinsStore>(coinsStore);
-const { fetchCoinsPrices, addTicker, removeTicker } = coinsStore;
+const { tickers, coinsPrices, isCoinsFetched } = storeToRefs<CoinsStore>(coinsStore);
+const { fetchCoinsPrices, addTicker, removeTicker }: CoinsStore = coinsStore;
 
-const newTickerName: Ref<string> = ref('');
-const activeTicker: Ref<Nullable<ICoin>> = ref(null);
+const newTickerName = ref<string>('');
+const activeTicker = ref<Nullable<ICoin>>(null);
 
-let interval: Nullable<ReturnType<typeof setInterval>> = null;
+const tickerAmounts = computed<number[]>(
+    () => (activeTicker.value && coinsPrices.value[activeTicker.value.name]) || []
+);
+
+let interval: SetInterval = null;
 
 watch(
     () => tickers.value.length,
     (value: number) => {
-        value > 0 ? loadCurrencies() : clearInterval(interval!);
+        if (interval !== null) {
+            clearInterval(interval);
+        }
+
+        value > 0 && loadTickersPrices();
     }
 );
 
@@ -100,13 +112,10 @@ function selectTicker(ticker: ICoin): void {
     activeTicker.value = ticker;
 }
 
-function loadCurrencies(): void {
-    if (interval !== null) {
-        clearInterval(interval);
-    }
-    fetchCoinsPrices(Currency.USD);
+function loadTickersPrices(): void {
+    fetchCoinsPrices(Currencies.USD);
     interval = setInterval(() => {
-        fetchCoinsPrices(Currency.USD);
+        fetchCoinsPrices(Currencies.USD);
     }, 5000);
 }
 </script>

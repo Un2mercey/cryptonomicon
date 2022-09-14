@@ -1,5 +1,5 @@
 import { CoinName, Nullable } from '@/@types';
-import { Currency } from '@/utils';
+import { Currencies } from '@/utils';
 
 export interface ICoin {
     id: string;
@@ -10,5 +10,5 @@ export interface ICoin {
     fullCoinName: string;
     description: string;
     isTrading: boolean;
-    currency: Nullable<Currency>;
+    currency: Nullable<Currencies>;
 }

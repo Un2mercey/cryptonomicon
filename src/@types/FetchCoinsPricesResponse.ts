@@ -1,4 +1,4 @@
 import { CoinName } from '@/@types/CoinName';
-import { Currency } from '@/utils';
+import { Currencies } from '@/utils';
 
-export type FetchCoinsPricesResponse = Record<CoinName, Record<Currency, number>>;
+export type FetchCoinsPricesResponse = Record<CoinName, Record<Currencies, number>>;

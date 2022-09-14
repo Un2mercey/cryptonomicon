@@ -1,54 +1,40 @@
-import { Ref, ref } from 'vue';
+import { find } from 'lodash';
 import { defineStore, Store, StoreDefinition } from 'pinia';
+import { ref } from 'vue';
 import { IUser } from '@/@interfaces';
+import { Nullable, Undefined } from '@/@types';
+import { usersMock } from '@/mocks';
+import { StoreNames } from '@/utils';
 
 interface State {
-    currentUser: IUser;
+    currentUser: Nullable<IUser>;
     availableUsers: IUser[];
 }
 
 interface Getters {}
 
 interface Actions {
-    setUser: (user: IUser) => void;
-    fetchUsers: () => Promise<IUser[]>;
+    setUser: (userId: number) => void;
+    fetchUsers: () => Promise<void>;
 }
 
-type UsersStoreDefinition = StoreDefinition<typeof STORE_NAME, State, Getters, Actions>;
-export type UsersStore = Store<typeof STORE_NAME, State, Getters, Actions>;
+type SD = StoreDefinition<StoreNames.USERS, State, Getters, Actions>;
+export type UsersStore = Readonly<Store<StoreNames.USERS, State, Getters, Actions>>;
 
-const usersMock = [
-    {
-        firstName: 'Arseniy',
-        lastName: 'Markov',
-        email: 'zamberg42@gmail.com',
-    },
-    {
-        firstName: 'Alibaba',
-        lastName: 'Zurabovich',
-        email: 'alibaba.zurabovich@gmail.com',
-    },
-    {
-        firstName: 'Jason',
-        lastName: 'Momoa',
-        email: 'jason-momoa@gmail.com',
-    },
-];
+export const useUsersStore: SD = defineStore(StoreNames.USERS, () => {
+    const currentUser = ref<Nullable<IUser>>(null);
+    const availableUsers = ref<IUser[]>([]);
 
-const STORE_NAME = 'users';
-export const useUsersStore: UsersStoreDefinition = defineStore(STORE_NAME, () => {
-    const currentUser: Ref<IUser> = ref(null);
-    const availableUsers: Ref<IUser[]> = ref([]);
-
-    function setUser(user: IUser): void {
-        currentUser.value = user;
+    function setUser(userId: number): void {
+        const foundedUser: Undefined<IUser> = find(availableUsers.value, { id: userId });
+        foundedUser && (currentUser.value = foundedUser);
     }
 
-    function fetchUsers(): Promise<IUser[]> {
+    function fetchUsers(): Promise<void> {
         return new Promise((resolve) => {
             setTimeout(() => {
-                availableUsers.value = usersMock;
-                resolve(usersMock);
+                availableUsers.value = [...usersMock];
+                resolve();
             }, 3000);
         });
     }

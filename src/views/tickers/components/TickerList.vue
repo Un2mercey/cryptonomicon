@@ -16,8 +16,7 @@
                             {{ ticker.name }} - {{ ticker.currency }}
                         </v-card-title>
                         <v-card-text>
-                            {{ CurrencySymbol[ticker.currency] }}
-                            {{ getPrice(getTickerLastPrice(ticker.name)) }}
+                            {{ getAmount(ticker.name) }}
                         </v-card-text>
                         <v-card-actions>
                             <v-btn
@@ -37,7 +36,7 @@
                         </v-card-title>
                         <v-card-text class="pb-2">
                             <v-progress-circular
-                                color="#800080FF"
+                                :color="purple"
                                 size="80"
                                 indeterminate
                             />
@@ -50,10 +49,12 @@
 </template>
 
 <script setup lang="ts">
+import { find } from 'lodash';
+import { storeToRefs } from 'pinia';
 import { ICoin } from '@/@interfaces';
-import { CoinName, Nullable, Undefined } from '@/@types';
+import { CoinName, Nullable } from '@/@types';
 import { CoinsStore, useCoinsStore } from '@/stores';
-import { CurrencySymbol } from '@/utils';
+import { CurrenciesSymbols } from '@/utils';
 
 type TickerListProps = {
     tickers: ICoin[];
@@ -70,10 +71,12 @@ type TickerListEmits = {
     (e: EMITS.SELECT, ticker: ICoin): void;
 };
 
-const { getTickerLastPrice }: CoinsStore = useCoinsStore();
+const { getTickerLastPrice } = storeToRefs<CoinsStore>(useCoinsStore());
 
 const { tickers = [], activeTicker } = defineProps<TickerListProps>();
 const emit = defineEmits<TickerListEmits>();
+
+const purple: string = '#800080FF';
 
 function removeTicker(ticker: ICoin): void {
     emit(EMITS.REMOVE, ticker);
@@ -83,8 +86,13 @@ function selectTicker(ticker: ICoin): void {
     emit(EMITS.SELECT, ticker);
 }
 
-function getPrice(price: number): string {
-    return price > 1 ? price.toFixed(2) : price.toPrecision(2);
+function getAmount(name: CoinName): string {
+    const ticker: ICoin = find(tickers, { name })!;
+    const prefix: string = CurrenciesSymbols[ticker.currency!];
+    let amount: number | string = getTickerLastPrice.value(name)!;
+    amount = amount > 1 ? amount.toFixed(2) : amount.toPrecision(2);
+
+    return `${prefix} ${amount}`;
 }
 </script>
 

@@ -11,7 +11,7 @@ import { RouteUrls, RouteNames } from './route-urls';
 type RouteView = Promise<RouteComponent>;
 const Tickers: () => RouteView = (): RouteView => import('@/views/tickers/Tickers.vue');
 
-const routes: Array<RouteRecordRaw> = [
+const routes: RouteRecordRaw[] = [
     {
         path: RouteUrls.HOME,
         name: RouteNames.HOME,
