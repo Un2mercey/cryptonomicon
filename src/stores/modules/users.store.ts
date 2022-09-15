@@ -1,14 +1,14 @@
 import { find } from 'lodash';
-import { defineStore, Store, StoreDefinition } from 'pinia';
+import { Store, StoreDefinition, defineStore } from 'pinia';
 import { ref } from 'vue';
-import { IUser } from '@/@interfaces';
 import { Nullable, Undefined } from '@/@types';
+import { User } from '@/@interfaces';
+import { StoreIds } from '@/stores';
 import { usersMock } from '@/mocks';
-import { StoreNames } from '@/utils';
 
 interface State {
-    currentUser: Nullable<IUser>;
-    availableUsers: IUser[];
+    currentUser: Nullable<User>;
+    availableUsers: User[];
 }
 
 interface Getters {}
@@ -18,15 +18,15 @@ interface Actions {
     fetchUsers: () => Promise<void>;
 }
 
-type SD = StoreDefinition<StoreNames.USERS, State, Getters, Actions>;
-export type UsersStore = Readonly<Store<StoreNames.USERS, State, Getters, Actions>>;
+type SD = StoreDefinition<StoreIds.USERS, State, Getters, Actions>;
+export type UsersStore = Readonly<Store<StoreIds.USERS, State, Getters, Actions>>;
 
-export const useUsersStore: SD = defineStore(StoreNames.USERS, () => {
-    const currentUser = ref<Nullable<IUser>>(null);
-    const availableUsers = ref<IUser[]>([]);
+export const useUsersStore: SD = defineStore(StoreIds.USERS, () => {
+    const currentUser = ref<Nullable<User>>(null);
+    const availableUsers = ref<User[]>([]);
 
     function setUser(userId: number): void {
-        const foundedUser: Undefined<IUser> = find(availableUsers.value, { id: userId });
+        const foundedUser: Undefined<User> = find(availableUsers.value, { id: userId });
         foundedUser && (currentUser.value = foundedUser);
     }
 

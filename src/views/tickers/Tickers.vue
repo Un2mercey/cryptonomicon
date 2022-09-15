@@ -66,35 +66,31 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
-import { ICoin } from '@/@interfaces';
 import { Nullable, SetInterval } from '@/@types';
+import { Coin } from '@/@interfaces';
 import { CoinsStore, useCoinsStore } from '@/stores';
 import { Currencies } from '@/utils';
-import TickerList from './components/TickerList.vue';
 import TickerGraph from './components/TickerGraph.vue';
+import TickerList from './components/TickerList.vue';
 
 const coinsStore: CoinsStore = useCoinsStore();
-const { tickers, coinsPrices, isCoinsFetched } = storeToRefs<CoinsStore>(coinsStore);
-const { fetchCoinsPrices, addTicker, removeTicker }: CoinsStore = coinsStore;
+const { tickers, coinPrices, isCoinsFetched } = storeToRefs<CoinsStore>(coinsStore);
+const { fetchCoinPrices, addTicker, removeTicker }: CoinsStore = coinsStore;
 
 const newTickerName = ref<string>('');
-const activeTicker = ref<Nullable<ICoin>>(null);
+const activeTicker = ref<Nullable<Coin>>(null);
 
-const tickerAmounts = computed<number[]>(
-    () => (activeTicker.value && coinsPrices.value[activeTicker.value.name]) || []
-);
+const tickerAmounts = computed<number[]>(() => (activeTicker.value && coinPrices.value[activeTicker.value.name]) || []);
 
 let interval: SetInterval = null;
 
 watch(
     () => tickers.value.length,
     (value: number) => {
-        if (interval !== null) {
-            clearInterval(interval);
-        }
-
-        value > 0 && loadTickersPrices();
-    }
+        if (interval) clearInterval(interval);
+        if (value) loadTickersPrices();
+        else interval = null;
+    },
 );
 
 function createNewTicker(): void {
@@ -103,7 +99,7 @@ function createNewTicker(): void {
     });
 }
 
-function selectTicker(ticker: ICoin): void {
+function selectTicker(ticker: Coin): void {
     if (activeTicker.value?.name === ticker.name) {
         activeTicker.value = null;
         return;
@@ -113,9 +109,9 @@ function selectTicker(ticker: ICoin): void {
 }
 
 function loadTickersPrices(): void {
-    fetchCoinsPrices(Currencies.USD);
+    fetchCoinPrices(Currencies.USD);
     interval = setInterval(() => {
-        fetchCoinsPrices(Currencies.USD);
+        fetchCoinPrices(Currencies.USD);
     }, 5000);
 }
 </script>

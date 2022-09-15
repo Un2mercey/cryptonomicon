@@ -11,10 +11,10 @@
 </template>
 
 <script setup lang="ts">
-import { ICoin } from '@/@interfaces';
+import { Coin } from '@/@interfaces';
 
 type TickerGraphProps = {
-    ticker: ICoin;
+    ticker: Coin;
     amounts: number[];
 };
 

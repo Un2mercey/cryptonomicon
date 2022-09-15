@@ -1,8 +1,3 @@
-export enum StoreNames {
-    COINS = 'Coins',
-    USERS = 'Users',
-}
-
 /**
  * It's a generic for type guards
  * @param e - Verifiable value

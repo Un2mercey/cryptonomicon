@@ -20,7 +20,7 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-btn
-                                @click="removeTicker(ticker)"
+                                @click.stop="removeTicker(ticker)"
                                 color="warn"
                                 outlined
                             >
@@ -51,13 +51,13 @@
 <script setup lang="ts">
 import { find } from 'lodash';
 import { storeToRefs } from 'pinia';
-import { ICoin } from '@/@interfaces';
 import { CoinName, Nullable } from '@/@types';
+import { Coin } from '@/@interfaces';
 import { CoinsStore, useCoinsStore } from '@/stores';
 import { CurrenciesSymbols } from '@/utils';
 
 type TickerListProps = {
-    tickers: ICoin[];
+    tickers: Coin[];
     activeTicker: Nullable<CoinName>;
 };
 
@@ -67,8 +67,8 @@ enum EMITS {
 }
 
 type TickerListEmits = {
-    (e: EMITS.REMOVE, ticker: ICoin): void;
-    (e: EMITS.SELECT, ticker: ICoin): void;
+    (e: EMITS.REMOVE, ticker: Coin): void;
+    (e: EMITS.SELECT, ticker: Coin): void;
 };
 
 const { getTickerLastPrice } = storeToRefs<CoinsStore>(useCoinsStore());
@@ -78,16 +78,16 @@ const emit = defineEmits<TickerListEmits>();
 
 const purple: string = '#800080FF';
 
-function removeTicker(ticker: ICoin): void {
+function removeTicker(ticker: Coin): void {
     emit(EMITS.REMOVE, ticker);
 }
 
-function selectTicker(ticker: ICoin): void {
+function selectTicker(ticker: Coin): void {
     emit(EMITS.SELECT, ticker);
 }
 
 function getAmount(name: CoinName): string {
-    const ticker: ICoin = find(tickers, { name })!;
+    const ticker: Coin = find(tickers, { name })!;
     const prefix: string = CurrenciesSymbols[ticker.currency!];
     let amount: number | string = getTickerLastPrice.value(name)!;
     amount = amount > 1 ? amount.toFixed(2) : amount.toPrecision(2);

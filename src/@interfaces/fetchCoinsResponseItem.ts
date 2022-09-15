@@ -1,6 +1,6 @@
 import { Base } from '@/@types';
 
-export interface IFetchCoinsResponseItem {
+export interface FetchCoinsResponseItem {
     Id: string;
     Url: string;
     ImageUrl: string;

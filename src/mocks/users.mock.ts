@@ -1,6 +1,6 @@
-import { IUser } from '@/@interfaces';
+import { User } from '@/@interfaces';
 
-export const usersMock: Readonly<IUser[]> = [
+export const usersMock: Readonly<User[]> = [
     {
         id: 1,
         name: 'Arseniy Markov',

@@ -1,7 +1,7 @@
 import { CoinName, Nullable } from '@/@types';
 import { Currencies } from '@/utils';
 
-export interface ICoin {
+export interface Coin {
     id: string;
     imageUrl: string;
     name: CoinName;

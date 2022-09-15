@@ -11,10 +11,9 @@
 
 <script setup lang="ts">
 import { onBeforeMount } from 'vue';
-import { CoinsStore, UsersStore, useUsersStore, useCoinsStore } from '@/stores';
-import localizeTitles from '@/modules/localizeTitles';
-import MainLayout from '@/elements/layout/MainLayout.vue';
-import Header from '@/elements/layout/Header.vue';
+import { localizeTitles } from '@/modules';
+import { CoinsStore, UsersStore, useCoinsStore, useUsersStore } from '@/stores';
+import { Header, MainLayout } from '@/elements';
 
 const { setUser, fetchUsers }: UsersStore = useUsersStore();
 const { fetchCoins }: CoinsStore = useCoinsStore();
