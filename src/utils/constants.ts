@@ -1,6 +1,6 @@
 /**
  * It's a generic for type guards
- * @param e { T } - Verifiable value
+ * @param e - Verifiable value
  */
 export const isCorrectEnum: <T>(e: T) => (token: unknown) => token is T[keyof T] =
     <T>(e: T) =>
@@ -12,7 +12,7 @@ export enum Currencies {
     EUR = 'EUR',
 }
 
-export enum CurrenciesSymbol {
+export enum CurrenciesSymbols {
     USD = '$',
     EUR = '€',
 }

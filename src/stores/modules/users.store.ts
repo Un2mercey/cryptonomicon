@@ -1,55 +1,40 @@
-import { Ref, ref } from 'vue';
-import { defineStore, Store, StoreDefinition } from 'pinia';
-import { IUser } from '@/@interfaces';
+import { find } from 'lodash';
+import { Store, StoreDefinition, defineStore } from 'pinia';
+import { ref } from 'vue';
+import { Nullable, Undefined } from '@/@types';
+import { User } from '@/@interfaces';
+import { StoreIds } from '@/stores';
+import { usersMock } from '@/mocks';
 
 interface State {
-    currentUser: IUser;
-    availableUsers: IUser[];
+    currentUser: Nullable<User>;
+    availableUsers: User[];
 }
 
 interface Getters {}
 
 interface Actions {
-    setUser: (user: IUser) => void;
-    fetchUsers: () => Promise<IUser[]>;
+    setUser: (userId: number) => void;
+    fetchUsers: () => Promise<void>;
 }
 
-type UsersStoreDefinition = StoreDefinition<typeof STORE_NAME, State, Getters, Actions>;
-export type UsersStore = Store<typeof STORE_NAME, State, Getters, Actions>;
+type SD = StoreDefinition<StoreIds.USERS, State, Getters, Actions>;
+export type UsersStore = Readonly<Store<StoreIds.USERS, State, Getters, Actions>>;
 
-const STORE_NAME = 'users';
-export const useUsersStore: UsersStoreDefinition = defineStore(STORE_NAME, () => {
-    const usersMock = [
-        {
-            firstName: 'Arseniy',
-            lastName: 'Markov',
-            email: 'zamberg42@gmail.com',
-        },
-        {
-            firstName: 'Alibaba',
-            lastName: 'Zurabovich',
-            email: 'alibaba.zurabovich@gmail.com',
-        },
-        {
-            firstName: 'Jason',
-            lastName: 'Momoa',
-            email: 'jason-momoa@gmail.com',
-        },
-    ];
+export const useUsersStore: SD = defineStore(StoreIds.USERS, () => {
+    const currentUser = ref<Nullable<User>>(null);
+    const availableUsers = ref<User[]>([]);
 
-    const currentUser: Ref<IUser> = ref(null);
-
-    const availableUsers: Ref<IUser[]> = ref([]);
-
-    function setUser(user: IUser): void {
-        currentUser.value = user;
+    function setUser(userId: number): void {
+        const foundedUser: Undefined<User> = find(availableUsers.value, { id: userId });
+        foundedUser && (currentUser.value = foundedUser);
     }
 
-    function fetchUsers(): Promise<IUser[]> {
+    function fetchUsers(): Promise<void> {
         return new Promise((resolve) => {
             setTimeout(() => {
-                availableUsers.value = usersMock;
-                resolve(usersMock);
+                availableUsers.value = [...usersMock];
+                resolve();
             }, 3000);
         });
     }

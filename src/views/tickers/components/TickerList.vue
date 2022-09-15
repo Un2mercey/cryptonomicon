@@ -1,47 +1,64 @@
 <template>
     <section class="d-flex justify-start align-start flex-wrap">
         <template
-            v-for="ticker in tickerList"
-            :key="ticker.id"
+            v-for="ticker in tickers"
+            :key="ticker.name"
         >
             <v-card
                 @click="selectTicker(ticker)"
                 variant="plain"
                 class="ticker-card ma-4"
-                :class="{ selected: ticker.id === activeTickerId }"
+                :class="{ selected: ticker.name === activeTicker }"
             >
-                <v-card-item>
-                    <v-card-title class="d-flex justify-center">
-                        {{ ticker.name }}
-                        {{ ticker.currency ? ` - ${ticker.currency}` : '' }}
-                    </v-card-title>
-                    <v-card-text v-if="ticker.price">
-                        {{ ticker.currencySymbol }}
-                        {{ getPrice(ticker.price) }}
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-btn
-                            @click="removeTicker(ticker)"
-                            color="warn"
-                            outlined
-                        >
-                            {{ $t('buttons.remove') }}
-                        </v-btn>
-                    </v-card-actions>
-                </v-card-item>
+                <template v-if="getTickerLastPrice(ticker.name)">
+                    <v-card-item>
+                        <v-card-title class="d-flex justify-center">
+                            {{ ticker.name }} - {{ ticker.currency }}
+                        </v-card-title>
+                        <v-card-text>
+                            {{ getAmount(ticker.name) }}
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-btn
+                                @click.stop="removeTicker(ticker)"
+                                color="warn"
+                                outlined
+                            >
+                                {{ $t('buttons.remove') }}
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card-item>
+                </template>
+                <template v-else>
+                    <v-card-item>
+                        <v-card-title class="d-flex justify-center">
+                            {{ ticker.name }}
+                        </v-card-title>
+                        <v-card-text class="pb-2">
+                            <v-progress-circular
+                                :color="purple"
+                                size="80"
+                                indeterminate
+                            />
+                        </v-card-text>
+                    </v-card-item>
+                </template>
             </v-card>
         </template>
     </section>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
-import { ICoin } from '@/@interfaces';
-import { Nullable } from '@/@types';
+import { find } from 'lodash';
+import { storeToRefs } from 'pinia';
+import { CoinName, Nullable } from '@/@types';
+import { Coin } from '@/@interfaces';
+import { CoinsStore, useCoinsStore } from '@/stores';
+import { CurrenciesSymbols } from '@/utils';
 
 type TickerListProps = {
-    tickerList: ICoin[];
-    activeTickerId: Nullable<string>;
+    tickers: Coin[];
+    activeTicker: Nullable<CoinName>;
 };
 
 enum EMITS {
@@ -50,23 +67,32 @@ enum EMITS {
 }
 
 type TickerListEmits = {
-    (e: EMITS.REMOVE, ticker: ICoin): void;
-    (e: EMITS.SELECT, ticker: ICoin): void;
+    (e: EMITS.REMOVE, ticker: Coin): void;
+    (e: EMITS.SELECT, ticker: Coin): void;
 };
 
-const { tickerList = [], activeTickerId } = defineProps<TickerListProps>();
+const { getTickerLastPrice } = storeToRefs<CoinsStore>(useCoinsStore());
+
+const { tickers = [], activeTicker } = defineProps<TickerListProps>();
 const emit = defineEmits<TickerListEmits>();
 
-function removeTicker(ticker: ICoin): void {
+const purple: string = '#800080FF';
+
+function removeTicker(ticker: Coin): void {
     emit(EMITS.REMOVE, ticker);
 }
 
-function selectTicker(ticker: ICoin): void {
+function selectTicker(ticker: Coin): void {
     emit(EMITS.SELECT, ticker);
 }
 
-function getPrice(price: number): string {
-    return price > 1 ? price.toFixed(2) : price.toPrecision(2);
+function getAmount(name: CoinName): string {
+    const ticker: Coin = find(tickers, { name })!;
+    const prefix: string = CurrenciesSymbols[ticker.currency!];
+    let amount: number | string = getTickerLastPrice.value(name)!;
+    amount = amount > 1 ? amount.toFixed(2) : amount.toPrecision(2);
+
+    return `${prefix} ${amount}`;
 }
 </script>
 

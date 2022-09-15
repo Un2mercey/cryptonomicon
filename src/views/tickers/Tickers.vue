@@ -19,7 +19,9 @@
                 class="pr-6"
             >
                 <v-text-field
-                    v-model="newTicker"
+                    v-model="newTickerName"
+                    :disabled="!isCoinsFetched"
+                    :loading="!isCoinsFetched"
                     :placeholder="$t('forms.newTicker')"
                     @keyup.enter="createNewTicker"
                     autofocus
@@ -29,7 +31,7 @@
             </v-col>
             <v-col>
                 <v-btn
-                    :disabled="!newTicker.trim().length"
+                    :disabled="!newTickerName.trim().length"
                     @click="createNewTicker"
                     color="primary"
                     outlined
@@ -38,13 +40,13 @@
                 </v-btn>
             </v-col>
         </v-row>
-        <template v-if="tickerList.length">
+        <template v-if="tickers.length">
             <v-divider class="mt-6 mb-2" />
             <v-row align="start">
                 <v-col cols="12">
                     <TickerList
-                        :ticker-list="tickerList"
-                        :active-ticker-id="activeTicker?.id"
+                        :tickers="tickers"
+                        :active-ticker="activeTicker?.name"
                         @remove="removeTicker"
                         @select="selectTicker"
                     />
@@ -53,44 +55,51 @@
             <v-divider class="mt-2 mb-6" />
         </template>
         <template v-if="activeTicker">
-            <TickerGraph :ticker="activeTicker" />
+            <TickerGraph
+                :ticker="activeTicker"
+                :amounts="tickerAmounts"
+            />
         </template>
     </v-container>
 </template>
 
 <script setup lang="ts">
-import { Ref, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
-import { TickersStore, useTickersStore } from '@/stores';
-import { Nullable } from '@/@types';
-import { ICoin } from '@/@interfaces';
+import { computed, ref, watch } from 'vue';
+import { Nullable, SetInterval } from '@/@types';
+import { Coin } from '@/@interfaces';
+import { CoinsStore, useCoinsStore } from '@/stores';
 import { Currencies } from '@/utils';
-import TickerList from './components/TickerList.vue';
 import TickerGraph from './components/TickerGraph.vue';
+import TickerList from './components/TickerList.vue';
 
-const tickersStore: TickersStore = useTickersStore();
-const { tickerList } = storeToRefs(tickersStore);
-const { addTicker, fetchCurrencies, removeTicker } = tickersStore;
+const coinsStore: CoinsStore = useCoinsStore();
+const { tickers, coinPrices, isCoinsFetched } = storeToRefs<CoinsStore>(coinsStore);
+const { fetchCoinPrices, addTicker, removeTicker }: CoinsStore = coinsStore;
 
-const newTicker: Ref<string> = ref('');
-const activeTicker: Ref<Nullable<ICoin>> = ref(null);
+const newTickerName = ref<string>('');
+const activeTicker = ref<Nullable<Coin>>(null);
 
-let interval: Nullable<ReturnType<typeof setInterval>> = null;
+const tickerAmounts = computed<number[]>(() => (activeTicker.value && coinPrices.value[activeTicker.value.name]) || []);
+
+let interval: SetInterval = null;
 
 watch(
-    () => tickerList.value.length,
-    () => {
-        loadCurrencies();
-    }
+    () => tickers.value.length,
+    (value: number) => {
+        if (interval) clearInterval(interval);
+        if (value) loadTickersPrices();
+        else interval = null;
+    },
 );
 
 function createNewTicker(): void {
-    addTicker(newTicker.value.trim().toLowerCase()).then(() => {
-        newTicker.value = '';
+    addTicker(newTickerName.value.trim()).then(() => {
+        newTickerName.value = '';
     });
 }
 
-function selectTicker(ticker: ICoin): void {
+function selectTicker(ticker: Coin): void {
     if (activeTicker.value?.name === ticker.name) {
         activeTicker.value = null;
         return;
@@ -99,13 +108,10 @@ function selectTicker(ticker: ICoin): void {
     activeTicker.value = ticker;
 }
 
-function loadCurrencies(): void {
-    if (interval) {
-        clearInterval(interval);
-    }
-    fetchCurrencies(Currencies.USD);
+function loadTickersPrices(): void {
+    fetchCoinPrices(Currencies.USD);
     interval = setInterval(() => {
-        fetchCurrencies(Currencies.USD);
+        fetchCoinPrices(Currencies.USD);
     }, 5000);
 }
 </script>

@@ -10,35 +10,28 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { IUser } from '@/@interfaces';
-import { CoinsStore, UsersStore, useUsersStore, useCoinsStore } from '@/stores';
-import localizeTitles from '@/modules/localizeTitles';
-import MainLayout from '@/elements/layout/MainLayout.vue';
-import Header from '@/elements/layout/Header.vue';
+import { onBeforeMount } from 'vue';
+import { localizeTitles } from '@/modules';
+import { CoinsStore, UsersStore, useCoinsStore, useUsersStore } from '@/stores';
+import { Header, MainLayout } from '@/elements';
 
-const usersStore: UsersStore = useUsersStore();
-const { setUser, fetchUsers } = usersStore;
+const { setUser, fetchUsers }: UsersStore = useUsersStore();
+const { fetchCoins }: CoinsStore = useCoinsStore();
 
-const coinsStore: CoinsStore = useCoinsStore();
-const { fetchCoinsList } = coinsStore;
-
-onMounted(() => {
+onBeforeMount(() => {
     localizeTitles();
     loadCoins();
     loadUsers();
 });
 
 async function loadUsers(): Promise<void> {
-    const fetchedUsers: IUser[] = await fetchUsers();
+    await fetchUsers();
     console.info('Users fetched');
-    if (fetchedUsers.length) {
-        setUser(fetchedUsers[0]);
-    }
+    setUser(1);
 }
 
 async function loadCoins(): Promise<void> {
-    await fetchCoinsList();
+    await fetchCoins();
     console.info('Coins fetched');
 }
 </script>

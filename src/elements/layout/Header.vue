@@ -1,11 +1,7 @@
 <template>
     <header class="mb-4">
         <template v-if="currentUser">
-            <h4 class="text-h4">
-                {{ $t('notices.greetings') }},
-                {{ currentUser.lastName }}
-                {{ currentUser.firstName }}
-            </h4>
+            <h4 class="text-h4">{{ $t('notices.greetings') }}, {{ currentUser.name }}!</h4>
         </template>
         <template v-else>
             <div class="d-flex">
@@ -24,9 +20,8 @@
 </template>
 
 <script setup lang="ts">
-import { UsersStore, useUsersStore } from '@/stores';
 import { storeToRefs } from 'pinia';
+import { useUsersStore } from '@/stores';
 
-const usersStore: UsersStore = useUsersStore();
-const { currentUser } = storeToRefs(usersStore);
+const { currentUser } = storeToRefs(useUsersStore());
 </script>

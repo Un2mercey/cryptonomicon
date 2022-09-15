@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import Qs from 'qs';
-import { IResponse, IResponseError } from '@/@interfaces';
+import { Response, ResponseError } from '@/@interfaces';
 
 type HandleInterceptorErrorOnResponse = (error: AxiosError) => void;
 
@@ -12,11 +12,11 @@ interface AdvancedAxiosRequestConfig<D = unknown> extends AxiosRequestConfig<D> 
     singletonRequestId?: string;
 }
 
-interface AdvancedAxiosResponse<T = IResponse, D = IResponse> extends AxiosResponse<T, D> {
+interface AdvancedAxiosResponse<T = Response, D = Response> extends AxiosResponse<T, D> {
     config: AdvancedAxiosRequestConfig<D>;
 }
 
-export class HttpClient {
+class HttpClient {
     private readonly instance: AxiosInstance;
     private readonly handleInterceptorErrorOnResponse?: HandleInterceptorErrorOnResponse;
 
@@ -53,32 +53,32 @@ export class HttpClient {
         return Promise.reject(error);
     };
 
-    public get<T = IResponse, R = AxiosResponse<T>, D = unknown>(
+    public get<T = Response, R = AxiosResponse<T>, D = unknown>(
         url: string,
-        config?: AdvancedAxiosRequestConfig<D>
+        config?: AdvancedAxiosRequestConfig<D>,
     ): Promise<T> {
         return this.instance.get(url, config);
     }
 
-    public post<T = IResponse, R = AxiosResponse<T>, D = unknown>(
+    public post<T = Response, R = AxiosResponse<T>, D = unknown>(
         url: string,
         data?: D,
-        config?: AdvancedAxiosRequestConfig<D>
+        config?: AdvancedAxiosRequestConfig<D>,
     ): Promise<T> {
         return this.instance.post(url, data, config);
     }
 
-    public put<T = IResponse, R = AxiosResponse<T>, D = unknown>(
+    public put<T = Response, R = AxiosResponse<T>, D = unknown>(
         url: string,
         data?: D,
-        config?: AdvancedAxiosRequestConfig<D>
+        config?: AdvancedAxiosRequestConfig<D>,
     ): Promise<T> {
         return this.instance.put(url, data, config);
     }
 
-    public delete<T = IResponse, R = AxiosResponse<T>, D = unknown>(
+    public delete<T = Response, R = AxiosResponse<T>, D = unknown>(
         url: string,
-        config?: AdvancedAxiosRequestConfig<D>
+        config?: AdvancedAxiosRequestConfig<D>,
     ): Promise<T> {
         return this.instance.delete(url, config);
     }
@@ -123,5 +123,12 @@ export class HttpClient {
         });
     };
 
-    public isCancel = (error: Error | IResponseError) => axios.isCancel(error);
+    public isCancel = (error: Error | ResponseError) => axios.isCancel(error);
 }
+
+const httpClient: HttpClient = new HttpClient(
+    import.meta.env.VITE_BASE_BACKEND_URL || '/',
+    import.meta.env.VITE_CRYPTOCOMPARE_API_KEY || '',
+);
+
+export default httpClient;
