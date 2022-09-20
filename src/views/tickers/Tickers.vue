@@ -47,8 +47,8 @@
                     <TickerList
                         :tickers="tickers"
                         :active-ticker="activeTicker?.name"
-                        @remove="removeTicker"
-                        @select="selectTicker"
+                        @remove="onRemoveTicker"
+                        @select="onSelectTicker"
                     />
                 </v-col>
             </v-row>
@@ -99,7 +99,15 @@ function createNewTicker(): void {
     });
 }
 
-function selectTicker(ticker: Coin): void {
+function onRemoveTicker(ticker: Coin): void {
+    if (activeTicker.value?.name === ticker.name) {
+        activeTicker.value = null;
+    }
+
+    removeTicker(ticker);
+}
+
+function onSelectTicker(ticker: Coin): void {
     if (activeTicker.value?.name === ticker.name) {
         activeTicker.value = null;
         return;
