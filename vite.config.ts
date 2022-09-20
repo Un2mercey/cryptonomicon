@@ -20,6 +20,16 @@ export default defineConfig({
         }),
         vuetify({
             autoImport: true,
+            styles: {
+                configFile: 'src/styles/settings.scss',
+            },
         }),
     ],
+    css: {
+        preprocessorOptions: {
+            scss: {
+                additionalData: `@import "@/styles/variables.scss";`,
+            },
+        },
+    },
 });

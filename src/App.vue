@@ -1,6 +1,6 @@
 <template>
     <MainLayout>
-        <Header />
+        <HeaderLayout />
         <router-view #default="{ Component }">
             <transition name="fade">
                 <component :is="Component" />
@@ -13,7 +13,7 @@
 import { onBeforeMount } from 'vue';
 import { localizeTitles } from '@/modules';
 import { CoinsStore, UsersStore, useCoinsStore, useUsersStore } from '@/stores';
-import { Header, MainLayout } from '@/elements';
+import { HeaderLayout, MainLayout } from '@/elements';
 
 const { setUser, fetchUsers }: UsersStore = useUsersStore();
 const { fetchCoins }: CoinsStore = useCoinsStore();

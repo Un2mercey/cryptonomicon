@@ -1,0 +1,121 @@
+$body-font-family: 'Poppins', sans-serif;
+$heading-font-family: $body-font-family;
+$border-radius-root: 6px;
+$font-size-root: 14px;
+$letter-spacing: normal;
+
+// LIGHT THEME
+$white: #ffffff;
+$black-coral: #5d647b;
+$cultured: #f7f7f8;
+$prussian-blue: #0b3144;
+$gainsboro: #e4e5e8;
+$spring-green: #00ffae;
+$silver-sand: #b0bcc2;
+$background: #fafafa;
+$base-shadow: rgba(255, 255, 255, 0.5);
+$secondary-shadow: rgba(83, 99, 94, 0.155);
+
+// DARK THEME
+$white-dark: #fafafa;
+$spring-green-dark: #4dd6a3;
+$spanish-gray: #9d9ea1;
+$davys-gray: #5b5c62;
+$onyx: #3e3f45;
+$jet: #2c2e35;
+$background-dark: #393b40;
+$base-shadow-dark: rgba(44, 46, 53, 0.5);
+
+// GENERAL COLORS
+$link: #1f99f2;
+$warning: #f38b01;
+$alert: #d64d4d;
+$shs: #ffafb1;
+
+$scrollbar: (
+    'light': $background,
+    'dark': $background-dark,
+);
+
+$grey: (
+    'base': #9d9ea1,
+    'light': #dddddd,
+);
+
+$grey-blue: (
+    'base': #5b5c62,
+    'select': #3e3f45,
+    'background': #393b40,
+    'dark': #2c2e35,
+);
+
+$black-total: black;
+
+$black-shadow: #161616;
+
+$green: (
+    'base': #4dd6a3,
+    'dark': #26a979,
+);
+
+$red: (
+    'base': #d64d4d,
+);
+
+$typography: (
+    'h1': (
+        'size': 2.45rem,
+        'weight': 700,
+        'line-height': 3.5rem,
+    ),
+    'h2': (
+        'size': 1.75rem,
+        'weight': 700,
+        'line-height': 2.75rem,
+    ),
+    'h3': (
+        'size': 1.5rem,
+        'weight': 700,
+        'line-height': 3.125rem,
+        'letter-spacing': normal,
+        'font-family': $heading-font-family,
+        'text-transform': none,
+    ),
+    'subtitle-1': (
+        'size': 1.25rem,
+        'weight': 700,
+        'line-height': 1.75rem,
+    ),
+    'subtitle-2': (
+        'size': 1rem,
+        'weight': 700,
+        'line-height': 1.375rem,
+    ),
+    'body-1': (
+        'size': 1rem,
+        'weight': 400,
+        'line-height': 1.5rem,
+    ),
+    'body-2': (
+        'size': 0.875rem,
+        'weight': 700,
+        'line-height': 1.25rem,
+    ),
+    'caption': (
+        'size': 0.75rem,
+        'weight': 400,
+        'line-height': 1.25rem,
+    ),
+    'button': (
+        'size': 0.875rem,
+        'weight': 500,
+        'line-height': 2.25rem,
+        'text-transform': none,
+    ),
+    'overline': (
+        'size': 0.75rem,
+        'weight': 400,
+        'line-height': 2rem,
+        'text-transform': none,
+    ),
+);
