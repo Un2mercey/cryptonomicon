@@ -1,0 +1,7 @@
+@use 'variables';
+@use 'vuetify/settings' with (
+    $body-font-family: variables.$body-font-family,
+    $heading-font-family: variables.$body-font-family,
+    $border-radius-root: variables.$border-radius-root,
+    $font-size-root: variables.$font-size-root
+);

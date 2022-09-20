@@ -4,6 +4,7 @@ import { vuetify } from '@/plugins';
 import { router } from '@/router';
 import App from './App.vue';
 import i18n from './i18n';
+import './styles/main.scss';
 
 const store = createPinia();
 

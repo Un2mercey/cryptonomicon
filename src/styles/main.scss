@@ -1,4 +1,43 @@
-@use 'vuetify/settings' with (
-    $color-pack: false,
-    $utilities: false
-);
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+
+html {
+    box-sizing: border-box;
+    -webkit-text-size-adjust: 100%;
+    word-break: normal;
+    -moz-tab-size: 4;
+    tab-size: 4;
+    font-size: 14px;
+    line-height: 16.8px;
+    font-family: $body-font-family !important;
+    background-color: $background;
+
+    &.dark {
+        background-color: $background-dark;
+    }
+}
+
+h1 {
+    font-size: 2.45rem;
+    font-weight: 700;
+    line-height: 3.5rem;
+}
+
+h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 2.75rem;
+}
+
+.v-application {
+    [class*='text-'] {
+        font-family: $body-font-family !important;
+    }
+
+    font-family: $body-font-family !important;
+    background-color: rgb(var(--v-theme-background));
+    color: $prussian-blue;
+
+    &.v-theme--dark {
+        color: white;
+    }
+}

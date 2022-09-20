@@ -1,4 +1,4 @@
-import Header from './layout/Header.vue';
+import HeaderLayout from './layout/HeaderLayout.vue';
 import MainLayout from './layout/MainLayout.vue';
 
-export { Header, MainLayout };
+export { HeaderLayout, MainLayout };
