@@ -16,21 +16,24 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { Coin } from '@/@interfaces';
+import { CoinsStore, useCoinsStore } from '@/stores';
 
 type TickerGraphProps = {
     ticker: Coin;
-    amounts: number[];
 };
 
-const { ticker, amounts = [] } = defineProps<TickerGraphProps>();
+const { coinPrices } = storeToRefs<CoinsStore>(useCoinsStore());
+const { ticker } = defineProps<TickerGraphProps>();
+
+const amounts = computed<number[]>(() => (ticker && coinPrices.value[ticker.name]) || []);
 
 const graph = computed(() => {
-    console.log(amounts);
-    const max = Math.max(...amounts);
-    const min = Math.min(...amounts);
-    return amounts.map((price) => 5 + ((price - min) * 95) / (max - min));
+    const max = Math.max(...amounts.value);
+    const min = Math.min(...amounts.value);
+    return amounts.value.map((price) => 5 + ((price - min) * 95) / (max - min));
 });
 </script>
 
