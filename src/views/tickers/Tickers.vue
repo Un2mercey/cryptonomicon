@@ -55,17 +55,14 @@
             <v-divider class="mt-2 mb-6" />
         </template>
         <template v-if="activeTicker">
-            <TickerGraph
-                :ticker="activeTicker"
-                :amounts="tickerAmounts"
-            />
+            <TickerGraph :ticker="activeTicker" />
         </template>
     </v-container>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { Nullable, SetInterval } from '@/@types';
 import { Coin } from '@/@interfaces';
 import { CoinsStore, useCoinsStore } from '@/stores';
@@ -74,13 +71,11 @@ import TickerGraph from './components/TickerGraph.vue';
 import TickerList from './components/TickerList.vue';
 
 const coinsStore: CoinsStore = useCoinsStore();
-const { tickers, coinPrices, isCoinsFetched } = storeToRefs<CoinsStore>(coinsStore);
+const { tickers, isCoinsFetched } = storeToRefs<CoinsStore>(coinsStore);
 const { fetchCoinPrices, addTicker, removeTicker }: CoinsStore = coinsStore;
 
 const newTickerName = ref<string>('');
 const activeTicker = ref<Nullable<Coin>>(null);
-
-const tickerAmounts = computed<number[]>(() => (activeTicker.value && coinPrices.value[activeTicker.value.name]) || []);
 
 let interval: SetInterval = null;
 
